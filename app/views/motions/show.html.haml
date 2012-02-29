@@ -38,31 +38,45 @@
             ="(edited: #{time_ago_in_words(@motion.updated_at)} ago)"
         %span.facilitator=", Facilitator: #{@motion.facilitator.email}"
       .row
-        #description_text.span16
+        #embedded.span9
+          #embedded-feed
+        #description_text.span7
+          =simple_format(@motion.description)
           #stats
             #graph.pie
-          =simple_format(@motion.description)
-  #votes
-    -if !@user_already_voted || @motion.phase == 'discussion'
-      =link_to "Cast your vote", new_motion_vote_path(@motion), class: 'btn primary'
-    -if @motion.votes.size > 0
-      %h3 Cast votes
-      %table.zebra-striped
-        %th position
-        %th user
-        %th statement
-        %th 
-        -@motion.votes.each do |vote|
-          %tr
-            %td=vote.position
-            %td=vote.user.name
-            %td=vote.statement
-            -if vote.user == current_user
-              %td
-                =link_to "edit", edit_motion_vote_path(@motion, vote)
-                |
-                =link_to "delete", motion_vote_path(@motion, vote), method: :delete, 
-                  confirm: "Are you sure you want to delete your vote?"
+          #votes
+            -if !@user_already_voted || @motion.phase == 'discussion'
+              =link_to "Cast your vote", new_motion_vote_path(@motion), class: 'btn primary'
+            -if @motion.votes.size > 0
+              %h3 Cast votes
+              #votes-table
+                %table.zebra-striped
+                  %th position
+                  %th user
+                  %th statement
+                  %th 
+                  -@motion.votes.each do |vote|
+                    %tr
+                      %td=vote.position
+                      %td=vote.user.name
+                      %td=vote.statement
+                      -if vote.user == current_user
+                        %td
+                          =link_to "edit", edit_motion_vote_path(@motion, vote)
+                          |
+                          =link_to "delete", motion_vote_path(@motion, vote), method: :delete, 
+                            confirm: "Are you sure you want to delete your vote?"
+
+%script{'data-app-id' => "hyB2pTvrL36Y50py8EWj6A", src: "https://assets.yammer.com/platform/yam.js"}
+
+:javascript
+  yam.connect.embedFeed(
+    { container: '#embedded-feed'
+    , network: 'tautoko'
+    , feedType: 'group'
+    , feedId: '153225997'
+    })
+
 :coffeescript
   jQuery ->
     @pie_graph_view = new Tautoko.Views.Utils.GraphView
