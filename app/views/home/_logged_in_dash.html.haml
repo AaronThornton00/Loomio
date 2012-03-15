@@ -1,14 +1,9 @@
 %section#motion_panels
   -if @motions
     -if @motions_voting.size > 0
-      %h3 Vote required
+      %h3 Open
       .row
         -@motions_voting.each_with_index do |m, index|
-          = render :partial => 'motions/motion_list', locals: {motion: m, last_class: motion_panel_class(index)}
-    -if @motions_discussing.size > 0
-      %h3 Dicussing
-      .row
-        -@motions_discussing.each_with_index do |m, index|
           = render :partial => 'motions/motion_list', locals: {motion: m, last_class: motion_panel_class(index)}
     -if @motions_closed.size > 0
       %h3 Closed
